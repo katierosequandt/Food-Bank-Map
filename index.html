@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+  <link rel=stylesheet type="text/css" href="style.css"/>
+  <script src="http://maps.google.com/maps/api/js?v=3.22&sensor=false"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+<form id="myForm">
+  <select id="selectCounty">
+    <option>All Counties</option>
+  </select>
+</form>
+
+<!-- <form id="myForm">
+  <select id="selectAgencyType">
+    <option>All Agency Types</option>
+  </select>
+</form> -->
+
+
+
+<input type="checkbox" id="backpackCheckbox" name="backpack" onclick="toggleGroup('Backpack Programs')" checked="checked"></input>
+  <label for="backpackCheckbox">Backpack Programs</label> 
+
+<input type="checkbox" id="closedPantriesCheckbox" name="closedPantries" onclick="toggleGroup('Closed Pantries')" checked="checked"></input>
+  <label for="closedPantriesCheckbox">Closed Pantries</label> 
+
+<input type="checkbox" id="emergencySheltersCheckbox" name="emergencyShelters" onclick="toggleGroup('Emergency Shelters')" checked="checked"></input>
+  <label for="emergencySheltersCheckbox">Emergency Shelters</label> 
+
+<input type="checkbox" id="foodPantriesCheckbox" name="foodPantries" onclick="toggleGroup('Food Pantries')" checked="checked"></input>
+  <label for="foodPantriesCheckbox">Food Pantries</label>
+
+<input type="checkbox" id="massDistributionCheckbox" name="massDistribution" onclick="toggleGroup('Mass Distribution')" checked="checked"></input>
+  <label for="massDistributionCheckbox">Mass Distribution</label>
+
+<input type="checkbox" id="nonEmergencyCheckbox" name="nonEmergency" onclick="toggleGroup('Non-Emergency Services')" checked="checked"></input>
+  <label for="nonEmergencyCheckbox">Non-Emergency Services</label>
+
+<input type="checkbox" id="soupKitchensCheckbox" name="soupKitchens" onclick="toggleGroup('Soup Kitchens')" checked="checked"></input>
+  <label for="soupKitchensCheckbox">Soup Kitchens</label>
+
+<div class="int_chart" id="map">
+
+ <!--   <div id="intOverlay">
+      <ul id="ul"></ul>
+   </div> -->
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.4.3/tabletop.min.js"></script>
+  <script type="text/javascript" src="foodbankmap.js"></script>
+
+</script> -->
+ --></body>

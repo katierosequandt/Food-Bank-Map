@@ -1,0 +1,68 @@
+.int_chart {
+    position:relative;
+    height: 650px;
+    max-width: 100%;  
+  }
+
+ {
+    stroke-width:0.5;
+}
+
+/*#intOverlay {
+    position:absolute;
+    width:30%;
+    max-width:250px;
+    height:100%;
+    left:0;
+    top:0;
+    bottom:0;
+    background-color:rgba(255, 255, 255, 0.8);
+    z-index: 1
+}
+
+#intOverlay ul {
+    position: relative;
+    height: 650px;
+    width:100%;
+    list-style:none;
+    font-family: arial;
+    cursor:pointer;
+    padding:0;
+    margin:0;
+    overflow-y:auto;
+}
+
+#intOverlay ul li {
+    position: relative;
+    border: 1px solid #BFBFBF;
+    padding: 8.5px 5px 8.6px 8px;
+}
+
+#intOverlay ul li:hover {
+    background-color: #267FCA;
+    font-weight:bold;
+}
+
+.leaflet-popup {
+    font-family: Apres, Verdana, sans-serif !important;
+}
+
+.leaflet-popup-content img { 
+    margin: 0 auto; display:block; 
+  }
+
+
+/* media query — on small screens, overlay takes up slightly more % and add line-height for wrapped names*/
+/*@media only screen and (max-width: 675px) {
+
+    #intOverlay ul li {
+      padding: 6.5px 2px 6.5px 4px;
+  }
+
+    #intOverlay {
+      width:33%;
+    }*/
+
+/*}*/
+ 
+
