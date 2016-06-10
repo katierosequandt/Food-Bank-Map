@@ -17,38 +17,31 @@
   </select>
 </form>
 
+<button type="button" id="showAllButton" name="showAll" onclick="allMarkerVisibility(true)">Show All Markers</button>
 
-<input type="checkbox" id="uncheckAllCheckbox" name="uncheck" onclick="toggleGroup('all')" checked="checked"></input>
-  <label for="uncheckAllCheckbox">Uncheck All</label> 
+<button type="button" id="hideAllButton" name="hideAll" onclick="allMarkerVisibility(false)">Hide All Markers</button>
 
-<input type="checkbox" id="backpackCheckbox" name="backpack" onclick="toggleGroup('Backpack Programs')" checked="checked"></input>
-  <label for="backpackCheckbox">Backpack Programs</label> 
+<input type="checkbox" class="checkbox" id="backpackCheckbox" name="backpack" onclick="toggleGroup('Backpack Programs', 'backpackCheckbox')" checked="checked"></input><label for="backpackCheckbox">Backpack Programs</label> 
 
-<input type="checkbox" id="closedPantriesCheckbox" name="closedPantries" onclick="toggleGroup('Closed Pantries')" checked="checked"></input>
-  <label for="closedPantriesCheckbox">Closed Pantries</label> 
+<input type="checkbox" class="checkbox" id="closedPantriesCheckbox" name="closedPantries" onclick="toggleGroup('Closed Pantries', 'closedPantriesCheckbox')" checked="checked"></input><label for="closedPantriesCheckbox">Closed Pantries</label> 
 
-<input type="checkbox" id="emergencySheltersCheckbox" name="emergencyShelters" onclick="toggleGroup('Emergency Shelters')" checked="checked"></input>
-  <label for="emergencySheltersCheckbox">Emergency Shelters</label> 
+<input type="checkbox" class="checkbox" id="emergencySheltersCheckbox" name="emergencyShelters" onclick="toggleGroup('Emergency Shelters', 'emergencySheltersCheckbox')" checked="checked"></input><label for="emergencySheltersCheckbox">Emergency Shelters</label> 
 
-<input type="checkbox" id="foodPantriesCheckbox" name="foodPantries" onclick="toggleGroup('Food Pantries')" checked="checked"></input>
-  <label for="foodPantriesCheckbox">Food Pantries</label>
+<input type="checkbox" class="checkbox" id="foodPantriesCheckbox" name="foodPantries" onclick="toggleGroup('Food Pantries', 'foodPantriesCheckbox')" checked="checked"></input><label for="foodPantriesCheckbox">Food Pantries</label>
 
-<input type="checkbox" id="massDistributionCheckbox" name="massDistribution" onclick="toggleGroup('Mass Distribution')" checked="checked"></input>
-  <label for="massDistributionCheckbox">Mass Distribution</label>
+<input type="checkbox" class="checkbox" id="massDistributionCheckbox" name="massDistribution" onclick="toggleGroup('Mass Distribution', 'massDistributionCheckbox')" checked="checked"></input><label for="massDistributionCheckbox">Mass Distribution</label>
 
-<input type="checkbox" id="nonEmergencyCheckbox" name="nonEmergency" onclick="toggleGroup('Non-Emergency Services')" checked="checked"></input>
-  <label for="nonEmergencyCheckbox">Non-Emergency Services</label>
+<input type="checkbox" class="checkbox" id="nonEmergencyCheckbox" name="nonEmergency" onclick="toggleGroup('Non-Emergency Services', 'nonEmergencyCheckbox')" checked="checked"></input><label for="nonEmergencyCheckbox">Non-Emergency Services</label>
 
-<input type="checkbox" id="soupKitchensCheckbox" name="soupKitchens" onclick="toggleGroup('Soup Kitchens')" checked="checked"></input>
-  <label for="soupKitchensCheckbox">Soup Kitchens</label>
+<input type="checkbox" class="checkbox" id="soupKitchensCheckbox" name="soupKitchens" onclick="toggleGroup('Soup Kitchens', 'soupKitchensCheckbox')" checked="checked"></input><label for="soupKitchensCheckbox">Soup Kitchens</label>
 
-<div class="int_chart" id="map">
 
- <!--   <div id="intOverlay">
-      <ul id="ul"></ul>
-   </div> -->
-</div>
+<div id="countyInfo"></div>
 
+<div class="int_chart" id="map"></div>
+
+
+  <script type="text/javascript" src="oms.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.js" charset="utf-8"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>

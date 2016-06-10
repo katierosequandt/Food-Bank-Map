@@ -1,6 +1,54 @@
-//load the google spreadsheet
-var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1cYtYkXZesM3My4vuGXncHcSFiOvcGC5xbgP0ube9Dic/pubhtml';
+///////   ICON STYLING & GROUPING OF MARKERS
+//set markerGroups object --- buckets for keeping all markers of a type together (for toggling visibiility)
+var markerGroups = {
+    "Backpack Programs": [],
+    "Closed Pantries": [],
+    "Non-Emergency Services": [],
+    "Emergency Shelters": [],
+    "Food Pantries": [],
+    "Mass Distribution": [],    
+    "Soup Kitchens": []
+};
 
+// assign proper marker png and group to each type of agency (some groups are lumped together into "Non_Emergency Services")
+var iconMap = {
+	"BACK PACK": {category: "Backpack Programs", icon: "backpack.png"},
+	"CLOSED PANTRY": {category: "Closed Pantries", icon: "carrot.png"},
+	"DAY PROGRAM": {category: "Non-Emergency Services", icon: "apple.png"},
+	"DISASTER RELIEF": {category: "Non-Emergency Services", icon: "apple.png"},
+	"EMERGENCY SHELTER": {category: "Emergency Shelters", icon: "house.png"},
+	"FOOD PANTRY": {category: "Food Pantries", icon: "grocery-bag.png"},
+	"HOUSEHOLD": {category: "Non-Emergency Services", icon: "apple.png"},
+	"MASS DISTRIBUTION": {category: "Mass Distribution", icon: "shopping_cart.png"},
+	"PET FOOD": {category: "Non-Emergency Services", icon: "apple.png"},
+	"PRODUCE": {category: "Non-Emergency Services", icon: "apple.png"},
+	"RESIDENTIAL PROGRAM": {category: "Non-Emergency Services", icon: "apple.png"},
+	"SEASONAL": {category: "Non-Emergency Services", icon: "apple.png"},
+	"SNACKS": {category: "Non-Emergency Services", icon: "apple.png"},
+	"SOUP KITCHEN": {category: "Soup Kitchens", icon: "soup.png"}
+};
+
+
+
+
+
+//_____________FUNCTIONS FOR EASY FORMATTING OF NUMBERS/ STRINGS FOR DISPLAY___________//
+
+//function adding commas to numbers for readable display of pounds of food
+function numberWithCommas(x) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+//function converting strings to title case
+function toTitleCase(str) {
+	return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+}
+
+
+
+
+
+//__________  MAP SETUP & STYLING ___________________//
 
 //initialize counties geojson, county borders and info (NY counties served by food bank)
 var counties =
@@ -29,152 +77,21 @@ var counties =
 {"type":"Feature","properties":{"STATE":"36","COUNTY":"113","NAME":"Warren","LSAD":"06","LSAD_TRANS":"County","OID_":56,"COUNTY_FIP":"113","POP2000":63303,"WHITE":61705,"BLACK":395,"AMER_ES":130,"ASIAN":347,"HAWN_PI":7,"OTHER":145,"MULT_RACE":574,"HISPANIC":663,"MALE":30701,"FEMALE":32602,"M_UNDER5":1777,"M5_9":2202,"M10_14":2439,"M15_17":1361,"M18_19":851,"M20":368,"M21":319,"M22_24":912,"M25_29":1596,"M30_34":2094,"M35_39":2522,"M40_44":2496,"M45_49":2436,"M50_54":2250,"M55_59":1799,"M60_61":551,"M62_64":776,"M65_66":490,"M67_69":733,"M70_74":1111,"M75_79":821,"M80_84":464,"M_OVER85":333,"F_UNDER5":1654,"F5_9":2157,"F10_14":2261,"F15_17":1341,"F18_19":799,"F20":340,"F21":295,"F22_24":890,"F25_29":1718,"F30_34":2167,"F35_39":2651,"F40_44":2638,"F45_49":2428,"F50_54":2279,"F55_59":1889,"F60_61":594,"F62_64":858,"F65_66":531,"F67_69":850,"F70_74":1412,"F75_79":1221,"F80_84":772,"F_OVER85":857,"HOUSEHOLDS":25726,"AV_HH_SIZE":2,"HSEHLD_1M":2948,"HSEHLD_1F":4072,"MAR_MINORC":5633,"MAR_NO_MC":7728,"MHH_MINORC":624,"FHH_MINORC":1634,"FAMILIES":17068,"AV_FAM_SZ":3,"HSE_UNITS":34852,"URBAN":16844,"RURAL":18008,"VACANT":9126,"OWNER_OCC":17952,"RENTER_OCC":7774},"geometry":{"type":"Polygon","coordinates":[[[-73.4382,43.803683],[-73.436874,43.80055],[-73.446186,43.794971],[-73.457231,43.783742],[-73.470167,43.776971],[-73.471426,43.771734],[-73.459718,43.76824],[-73.457255,43.762638],[-73.463753,43.759093],[-73.460619,43.741197],[-73.463452,43.728736],[-73.474509,43.710966],[-73.472331,43.707262],[-73.476518,43.699372],[-73.483856,43.692419],[-73.486682,43.679521],[-73.494458,43.673024],[-73.493275,43.655281],[-73.501321,43.645627],[-73.512377,43.642967],[-73.539429,43.625065],[-73.549597,43.611631],[-73.564766,43.598119],[-73.56788,43.590618],[-73.576184,43.582934],[-73.580271,43.574474],[-73.588761,43.569327],[-73.605585,43.567539],[-73.612468,43.563328],[-73.614004,43.556994],[-73.607365,43.551325],[-73.616722,43.53712],[-73.618998,43.520631],[-73.626445,43.52159],[-73.632329,43.512103],[-73.631809,43.497031],[-73.62873,43.486422],[-73.604147,43.353087],[-73.59496,43.306118],[-73.606303,43.306468],[-73.628149,43.303863],[-73.636838,43.306927],[-73.642761,43.304172],[-73.641861,43.293272],[-73.665862,43.290866],[-73.671273,43.293154],[-73.675162,43.285072],[-73.661061,43.272872],[-73.669562,43.263872],[-73.676462,43.263472],[-73.680762,43.267372],[-73.684962,43.280872],[-73.690162,43.284072],[-73.695244,43.278915],[-73.704584,43.279357],[-73.709848,43.274291],[-73.730478,43.270774],[-73.740138,43.262924],[-73.737574,43.255226],[-73.743957,43.242717],[-73.760219,43.231858],[-73.764369,43.223677],[-73.77006,43.222747],[-73.77949,43.234904],[-73.789731,43.244421],[-73.803298,43.25032],[-73.819532,43.250643],[-73.825458,43.245631],[-73.833703,43.249587],[-73.835811,43.253756],[-73.835567,43.265835],[-73.826077,43.276088],[-73.827406,43.286125],[-73.824615,43.30427],[-73.836918,43.306611],[-73.842959,43.318705],[-73.854009,43.324976],[-73.858991,43.33032],[-73.854203,43.339246],[-73.864038,43.345496],[-73.865692,43.355216],[-73.873355,43.359744],[-73.875159,43.365725],[-73.870977,43.372523],[-73.874567,43.384495],[-73.883299,43.397988],[-74.025462,43.384435],[-74.1601,43.371532],[-74.182555,43.52088],[-74.203537,43.657166],[-74.214625,43.728703],[-74.057005,43.744513],[-73.785055,43.77067],[-73.613919,43.787206],[-73.48659,43.799973],[-73.4382,43.803683]]]}},
 {"type":"Feature","properties":{"STATE":"36","COUNTY":"115","NAME":"Washington","LSAD":"06","LSAD_TRANS":"County","OID_":57,"COUNTY_FIP":"115","POP2000":61042,"WHITE":57973,"BLACK":1785,"AMER_ES":125,"ASIAN":172,"HAWN_PI":9,"OTHER":510,"MULT_RACE":468,"HISPANIC":1232,"MALE":31301,"FEMALE":29741,"M_UNDER5":1745,"M5_9":2172,"M10_14":2481,"M15_17":1394,"M18_19":954,"M20":519,"M21":483,"M22_24":1073,"M25_29":1964,"M30_34":2405,"M35_39":2643,"M40_44":2539,"M45_49":2374,"M50_54":2017,"M55_59":1631,"M60_61":557,"M62_64":760,"M65_66":459,"M67_69":678,"M70_74":987,"M75_79":748,"M80_84":421,"M_OVER85":297,"F_UNDER5":1668,"F5_9":2010,"F10_14":2273,"F15_17":1285,"F18_19":653,"F20":262,"F21":291,"F22_24":818,"F25_29":1552,"F30_34":2038,"F35_39":2410,"F40_44":2387,"F45_49":2203,"F50_54":1948,"F55_59":1643,"F60_61":558,"F62_64":782,"F65_66":519,"F67_69":750,"F70_74":1177,"F75_79":1025,"F80_84":756,"F_OVER85":733,"HOUSEHOLDS":22458,"AV_HH_SIZE":3,"HSEHLD_1M":2291,"HSEHLD_1F":3103,"MAR_MINORC":5358,"MAR_NO_MC":7036,"MHH_MINORC":672,"FHH_MINORC":1431,"FAMILIES":15798,"AV_FAM_SZ":3,"HSE_UNITS":26794,"URBAN":7839,"RURAL":18955,"VACANT":4336,"OWNER_OCC":16698,"RENTER_OCC":5760},"geometry":{"type":"Polygon","coordinates":[[[-73.379279,43.808391],[-73.376361,43.798766],[-73.357547,43.785933],[-73.354758,43.776721],[-73.350593,43.771939],[-73.354597,43.764167],[-73.369725,43.744274],[-73.370612,43.725329],[-73.385883,43.711336],[-73.393723,43.6992],[-73.402078,43.693106],[-73.408061,43.669438],[-73.418763,43.64788],[-73.426463,43.642598],[-73.42791,43.634428],[-73.418319,43.623325],[-73.423708,43.612356],[-73.421616,43.603023],[-73.430325,43.590532],[-73.428636,43.583994],[-73.398125,43.568065],[-73.39196,43.569915],[-73.382549,43.579193],[-73.383446,43.596778],[-73.372375,43.606014],[-73.376036,43.612596],[-73.369933,43.619093],[-73.372486,43.622751],[-73.358593,43.625065],[-73.347621,43.622509],[-73.342181,43.62607],[-73.317566,43.627355],[-73.310606,43.624114],[-73.302076,43.624364],[-73.300285,43.610806],[-73.292232,43.60255],[-73.29353635984867,43.578518404306465],[-73.284912,43.579272],[-73.279726,43.574241],[-73.26938,43.571973],[-73.258631,43.564949],[-73.248641,43.553857],[-73.250132,43.543429],[-73.242042,43.534925],[-73.241891,43.529418],[-73.246821,43.52578],[-73.248401,43.470443],[-73.252582,43.370997],[-73.256493,43.259249],[-73.258718,43.229894],[-73.265574,43.096223],[-73.26978,43.035923],[-73.274294,42.943652],[-73.36807,42.944049],[-73.379596,42.943753],[-73.393596,42.953113],[-73.401325,42.952266],[-73.412103,42.957383],[-73.420659,42.954903],[-73.433136,42.958251],[-73.449269,42.951217],[-73.450593,42.944581],[-73.577197,42.942212],[-73.635463,42.94129],[-73.631242,42.946322],[-73.628708,42.959151],[-73.631467,42.969739],[-73.628822,42.972494],[-73.608691,42.983247],[-73.606699,42.999241],[-73.597113,43.007623],[-73.590875,43.023241],[-73.591578,43.031962],[-73.585833,43.049728],[-73.577891,43.058666],[-73.581116,43.073013],[-73.575456,43.083982],[-73.578228,43.090632],[-73.573342,43.100545],[-73.577229,43.118976],[-73.585599,43.123665],[-73.589833,43.131499],[-73.590752,43.139488],[-73.580636,43.152192],[-73.583102,43.164703],[-73.589551,43.168837],[-73.581003,43.18249],[-73.585809,43.192372],[-73.579279,43.208906],[-73.581546,43.218897],[-73.585957,43.227432],[-73.594204,43.233401],[-73.597082,43.244441],[-73.586947,43.255899],[-73.589054,43.263683],[-73.596,43.269117],[-73.600576,43.268494],[-73.599657,43.2798],[-73.594969,43.291344],[-73.588821,43.300544],[-73.59496,43.306118],[-73.604147,43.353087],[-73.62873,43.486422],[-73.631809,43.497031],[-73.632329,43.512103],[-73.626445,43.52159],[-73.618998,43.520631],[-73.616722,43.53712],[-73.607365,43.551325],[-73.614004,43.556994],[-73.612468,43.563328],[-73.605585,43.567539],[-73.588761,43.569327],[-73.580271,43.574474],[-73.576184,43.582934],[-73.56788,43.590618],[-73.564766,43.598119],[-73.549597,43.611631],[-73.539429,43.625065],[-73.512377,43.642967],[-73.501321,43.645627],[-73.493275,43.655281],[-73.494458,43.673024],[-73.486682,43.679521],[-73.483856,43.692419],[-73.476518,43.699372],[-73.472331,43.707262],[-73.474509,43.710966],[-73.463452,43.728736],[-73.460619,43.741197],[-73.463753,43.759093],[-73.457255,43.762638],[-73.459718,43.76824],[-73.471426,43.771734],[-73.470167,43.776971],[-73.457231,43.783742],[-73.446186,43.794971],[-73.436874,43.80055],[-73.4382,43.803683],[-73.379279,43.808391]]]}}]};
 
-
-//set marker groups
-var markerGroups = {
-    "Backpack Programs": [],
-    "Closed Pantries": [],
-    "Non-Emergency Services": [],
-    "Emergency Shelters": [],
-    "Food Pantries": [],
-    "Mass Distribution": [],    
-    "Soup Kitchens": []
-};
-
-
-// assign proper marker png and group to each type of agency
-var iconMap = {
-	"BACK PACK": {
-		category: "Backpack Programs",
-		icon: "backpack.png"
-	},
-	"CLOSED PANTRY": {
-		category: "Closed Pantries",
-		icon: "green-marker-1.png"
-	},
-	"DAY PROGRAM": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"DISASTER RELIEF": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"EMERGENCY SHELTER": {
-		category: "Emergency Shelters",
-		icon: "house.png"
-	},
-	"FOOD PANTRY": {
-		category: "Food Pantries",
-		icon: "grocery.png"
-	},
-	"HOUSEHOLD": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"MASS DISTRIBUTION": {
-		category: "Mass Distribution",
-		icon: "shopping_cart.png"
-	},
-	"PET FOOD": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"PRODUCE": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"RESIDENTIAL PROGRAM": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"SEASONAL": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"SNACKS": {
-		category: "Non-Emergency Services",
-		icon: "apple.png"
-	},
-	"SOUP KITCHEN": {
-		category: "Soup Kitchens",
-		icon: "soup.png"
-	}
-};
-
-
 // mapStyle json to remove roads & pois, lighten parks & water, etc 
 var mapStyle = [
-  {
-    "featureType": "road.local",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },{
-    "featureType": "road.highway",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },{
-    "featureType": "road.arterial",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },{
-    "featureType": "poi.attraction",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },{
-    "featureType": "poi.business",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  },{
-    "featureType": "poi.park",
-    "stylers": [
-      { "visibility": "on" },
-      { "saturation": -81 },
-      { "lightness": 23 }
-    ]
-  }, {
-    "featureType": "water",
-    "stylers": [
-      { "saturation": -61 }
-    ]
-  },{
-    "featureType": "administrative.locality",
-    "stylers": [
-      { "visibility": "on" },
-      { "saturation": -81 },
-      { "lightness": 14 }
-    ]
-  },
-  {
-    "featureType": "landscape.natural.terrain",
-    "stylers": [
-      { "visibility": "off" }
-    ]
-  }
+  {"featureType": "road.local", "stylers": [{ "visibility": "off" }]},
+  {"featureType": "road.highway","stylers": [{ "visibility": "off" }]},
+  {"featureType": "road.arterial", "stylers": [{ "visibility": "off" }]},
+  {"featureType": "poi.attraction", "stylers": [{ "visibility": "off" }]},
+  {"featureType": "poi.business", "stylers": [{ "visibility": "off" }]},
+  {"featureType": "poi.park", "stylers": [{ "visibility": "on" }, { "saturation": -81 }, { "lightness": 23 }]}, 
+  {"featureType": "water", "stylers": [{ "saturation": -61 }]},
+  {"featureType": "administrative.locality", "stylers": [{ "visibility": "on" }, { "saturation": -81 }, { "lightness": 14 }]},
+  {"featureType": "landscape.natural.terrain", "stylers": [{ "visibility": "off" }]}
 ];
 
-//set colors array for shading counties based on insecurity data
-colors = ["#edf8fb", "#b2e2e2", "#66c2a4", "#238b45"];
 
-
-//function adding commas to numbers for readable display of pounds of food
-function numberWithCommas(x) {
-	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-//function converting strings to title case
-function toTitleCase(str) {
-	return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-}
-
-
-
-// initialize the google roadmap styled with myStyle, center on food bank, disable scroll wheel
+// initialize the google roadmap styled with mapStyle, center on food bank, disable scroll wheel
 var map = new google.maps.Map(document.getElementById('map'), {
        mapTypeControlOptions: {
          mapTypeIds: ['mystyle', google.maps.MapTypeId.ROADMAP]
@@ -187,19 +104,29 @@ var map = new google.maps.Map(document.getElementById('map'), {
 
 map.mapTypes.set('mapStyle', new google.maps.StyledMapType(mapStyle, { name: 'mapStyle' }));
 
-var infoWindow = new google.maps.InfoWindow();
+
+//uses OverlappingMarkerSpiderfier to deal with overlapping markers
+var oms = new OverlappingMarkerSpiderfier(map);
+var iw = new google.maps.InfoWindow();
 
 
 
-//populate County dropdown with county names in counties object. Also, ceate PoundsPerCounty object for calcuating pounds donated by county.
+
+
+//___________POPULATE COUNTY SELECTION DROPDOWN MENU & ZOOM IN ON SELECTED COUNTY____________//
+
+//populate County dropdown with county names in the counties object. Also, ceate PoundsPerCounty object for calcuating pounds distributed to each county.
 var countyDropdown = document.getElementById("selectCounty");
 var poundsPerCounty = {};
+var markerCounties = {};
 
-for (var i in counties.features) {
+for (var i in counties.features) {	
 	//county names in poundsPerCounty should be upper case to match the style of the spreadsheet
+	markerCounties[counties.features[i].properties.NAME.toUpperCase()] = [];
 	poundsPerCounty[counties.features[i].properties.NAME.toUpperCase()] = 0;
 	countyDropdown[countyDropdown.length] = new Option(counties.features[i].properties.NAME);	
 }
+
 
 //take user selection from dropdown menu of counties. When selected call zoomInOnCounty function
 d3.select("#selectCounty")
@@ -217,11 +144,7 @@ function zoomInOnCounty(dropdownCounty) {
 			map.panTo(reset);
 			map.setZoom(7);
 
-		// countyLayer.overrideStyle(setCountyStyle(counties));
-		// countyLayer.setMap(map);
-// countyLayer.setStyle(setCountyStyle(counties));
 			return;
-
   	}
 
   	// if user selects any county, cycle through counties object to find county info that matches dropdown selection
@@ -229,7 +152,18 @@ function zoomInOnCounty(dropdownCounty) {
 	  	for (var i in counties.features) {
 	    	if (counties.features[i].properties.NAME === dropdownCounty) {
 
-	    		// set all the coordinates in the selected county's borders to var coords
+				//pull oout county name, food insecurity rate, number of sites, and pounds donated. call displayCountyInfo function
+				var selectedCountyName = dropdownCounty;
+				var selectedCountyInsecurity = counties.features[i].properties.InsecurityRate;
+				var numberOfSites = markerCounties[selectedCountyName.toUpperCase()].length;
+				var selectedCountyPounds = poundsPerCounty[selectedCountyName.toUpperCase()];
+
+				var displayHtml = (selectedCountyName + " County <br> Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%<br>" + numberOfSites + " service sites <br>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015");
+
+				displayCountyInfo(displayHtml);
+
+
+	    		// set all the coordinates in the selected county's borders to var coords, for zooming & centering the map
 	    		var coords = counties.features[i].geometry.coordinates[0];
 				var bounds = new google.maps.LatLngBounds(null);
 
@@ -242,26 +176,21 @@ function zoomInOnCounty(dropdownCounty) {
   				}
 
 				map.fitBounds(bounds);
-
-
-				//go through countylayers and find the selected county, make the stroke darker
-				// countyLayer.forEach(function(d) {
-				// 	if (dropdownCounty === d.getProperty("NAME")) {
-				// 		countyLayer.overrideStyle(d,{strokeWeight: 3, fillOpacity: 0.7});
-				// 	}
-
-				// 	if (dropdownCounty != d.getProperty("NAME")) {
-				// 		countyLayer.overrideStyle(d,{fillOpacity: 0.2});
-				// 	}
-				// });
+	
   			}	
 		}
 	}
-}
+} 
 
 
 
-//access the data in the google spreadsheet
+
+//_____________ACCESS THE DATA IN THE GOOGLE SPREADSHEET, PLOT MARKERS_______________//
+
+//load the google spreadsheet
+var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1cYtYkXZesM3My4vuGXncHcSFiOvcGC5xbgP0ube9Dic/pubhtml';
+
+//Use Tabletop to access the data in the google spreadsheet
 function init() {
   Tabletop.init( { key: public_spreadsheet_url,
                    callback: accessInfo,
@@ -275,7 +204,7 @@ function accessInfo(data, tabletop) {
 
 	for (var propt in agencyData){
 
-		//pull out all info for marker popups, put into variable called html
+		//pull out all info for marker popups, put it all into a variable called html
 		var name = ("<strong>" + agencyData[propt].AgencyName + "</strong><br>");
 		var group = (toTitleCase(agencyData[propt].Group) + "<br>");
 		var address = (agencyData[propt].Addr1 + ", " + agencyData[propt].Addr2 + "<br>" + agencyData[propt].City + ", " + agencyData[propt].State + "<br>");
@@ -302,8 +231,8 @@ function accessInfo(data, tabletop) {
     	var lng = Number(agencyData[propt].lng);
     	var icon = iconMap[agencyData[propt].Group].icon;
 
-		var marker = createMarker(lat, lng, name, address, contact, type, html, icon, map);
-		bindInfoWindow(marker, map, infoWindow, html);
+    	//call createMarker function
+		var marker = createMarker(lat, lng, name, address, contact, type, county, html, icon, map);
 
 		//keep a running tally of pounds donated in each county
     	poundsPerCounty[county] = poundsPerCounty[county] + pounds;
@@ -311,45 +240,71 @@ function accessInfo(data, tabletop) {
 }
 
 //create marker function, called by accessInfo()
-function createMarker(lat, lng, name, address, contact, type, html, icon, map) {
+function createMarker(lat, lng, name, address, contact, type, county, html, icon, map) {
 	var marker = new google.maps.Marker({
     	map: map,
 		position: {lat: lat, lng: lng},
     	icon: icon,
-    	type: type
+    	type: type,
+    	html: html
 	});
 
-	//sort sites by type, add sites to the arrays designated for each type (for toggling)
+	//using oms makes spiderfy work for overlapping markers
+	oms.addMarker(marker);
+
+	//sort sites by county, add sites to the arrays designated for each county in markerCounties (for hiding when another county is selected)
+	if (!markerCounties[county]) markerCounties[county] = [];
+		markerCounties[county].push(marker);	
+
+	//sort sites by type, add sites to the arrays designated for each type in markerGroups (for toggling)
 	if (!markerGroups[type]) markerGroups[type] = [];
 		markerGroups[type].push(marker);
-		bindInfoWindow(marker, map, infoWindow, html);
-		return marker, markerGroups;
-	}
+	
+	return marker, markerCounties, markerGroups, oms;
+}
 
-//toggle group function, called by selecting checkboxes (set up in index.html)
-function toggleGroup(type) {
+
+
+//if user clicks "Show All Markers" or "Hide all Markers" buttons, do that and appropriately check/uncheck the boxes
+function allMarkerVisibility(trueOrFalse) {
+
+  	var allCheckboxes = document.getElementsByTagName('input');
+  	for(var i=0; i < allCheckboxes.length; i++) {
+    	if(allCheckboxes[i].type == 'checkbox') {
+      		allCheckboxes[i].checked = trueOrFalse;
+    	}
+  	}
+
+	for (var j in markerGroups) {
+		for (var k = 0; k < markerGroups[j].length; k++) {
+    		var marker = markerGroups[j][k];
+    		marker.setVisible(trueOrFalse);        
+		}
+	}
+}
+
+
+//toggle group function, called by selecting checkboxes (set up in index.html). Passes in name & id, checks if box is checked, and displays accordingly
+function toggleGroup(type, id) {
 
     for (var i = 0; i < markerGroups[type].length; i++) {
-        var marker = markerGroups[type][i];
-        if (!marker.getVisible()) {
-            marker.setVisible(true);
-        } else {
-            marker.setVisible(false);
-        }
+    	var marker = markerGroups[type][i];
+
+    	if (document.getElementById(id).checked) {
+        	marker.setVisible(true);
+    	} else {
+        	marker.setVisible(false);
+    	}
 	}
 }
 
-//called by accessInfo()
-function bindInfoWindow(marker, map, infoWindow, html) {
-	google.maps.event.addListener(marker, 'click', function () {
-    	infoWindow.setContent(html);
-    	infoWindow.open(map, marker);
-	});
-}
 
 init();
 
 
+
+
+//__________SET UP COUNTIES, DARKEN BORDER ON HOVER
 
 //use counties json to overlay county lines, can set up other layers here too
 var countyLayer = new google.maps.Data();
@@ -367,16 +322,14 @@ countyLayer.setStyle(setCountyStyle(counties));
 countyLayer.setMap(map);
 
 
-//initialize county info popup
-var countyInfoWindow = new google.maps.InfoWindow({
-	content: ""
-});
-
-
-// darken county border on hover
+// make county border heavier on hover
 function countyHover () {
   	countyLayer.addListener('mouseover', function(event) {
   		countyLayer.overrideStyle(event.feature, {strokeWeight: 3});
+  	});
+
+  	countyLayer.addListener('mouseout', function(event) {
+  		countyLayer.overrideStyle(event.feature, {strokeWeight: 1});
   	});
 }
 
@@ -384,6 +337,9 @@ countyHover();
 
 
 
+
+
+//___________LOAD FOOD INSECURITY TSV, COLOR COUNTIES BASED ON SECURITY RATE, READY FUNCTION___________//
 
 // ready fuction, load food_insecurity.tsv
 queue()
@@ -415,7 +371,6 @@ function ready(error, insecure) {
 	});
 
 
-
 	//go through counties and color based on food insecurity rate
 	countyLayer.forEach(function(d) {
 		
@@ -440,30 +395,44 @@ function ready(error, insecure) {
 	});
 
 
-	function createCountyPopups() {
-
-		countyLayer.addListener('click', function(event) {
-
-			var selectedCountyName = event.feature.getProperty("NAME");
-			var selectedCountyInsecurity = event.feature.getProperty("InsecurityRate");
-
-			countyInfoWindow.setContent(selectedCountyName + " County <br> Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "% <br> More info: hfjdhfjkds" );
-			countyInfoWindow.setPosition(event.latLng);
-			countyInfoWindow.open(map);
-
-    		// countyLayer.overrideStyle(event.feature, {strokeWeight: 3});
-  		});
-  			
-  		countyLayer.addListener('mouseout', function(event) {
-    		countyLayer.overrideStyle(event.feature, {strokeWeight: 1});
-    		countyInfoWindow.close(map);
-
-		});
-  		}
-
-
-	createCountyPopups();
-
-
-
 }
+
+
+//____________DISPLAY COUNTY INFO ON CLICK OR SELECTION________________//
+
+	//add a listener to the county layer, pull out info on county, call function to diplay county info on click
+	countyLayer.addListener('click', function(event) {
+
+		var selectedCountyName = event.feature.getProperty("NAME");
+		var selectedCountyInsecurity = event.feature.getProperty("InsecurityRate");
+		var numberOfSites = markerCounties[selectedCountyName.toUpperCase()].length;
+		var selectedCountyPounds = poundsPerCounty[selectedCountyName.toUpperCase()];
+
+		var displayHtml = (selectedCountyName + " County <br> Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%<br>" + numberOfSites + " service sites <br>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015");
+
+
+		displayCountyInfo(displayHtml);
+	});
+
+	function displayCountyInfo(displayHtml) {
+
+		document.getElementById("countyInfo").innerHTML = displayHtml;
+  	}
+
+
+
+//______________USE SPIDERFY TO EXPAND OVERLAPPING MARKERS ON CLICK. DISPLAY MARKER INFOWINDOWS ON CLICK_____________//
+
+//set up listener
+oms.addListener('click', function(marker, event) {
+	iw.setContent(marker.html);
+	iw.open(map, marker);
+});
+
+google.maps.event.addListener(map, "click", function(event) {
+	iw.close();
+});
+
+
+
+

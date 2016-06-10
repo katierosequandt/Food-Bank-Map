@@ -2,12 +2,9 @@
     position:relative;
     height: 650px;
     max-width: 100%;  
-  }
-
- {
     stroke-width:0.5;
-}
-
+  }
+ 
 /*#intOverlay {
     position:absolute;
     width:30%;
@@ -16,23 +13,23 @@
     left:0;
     top:0;
     bottom:0;
-    background-color:rgba(255, 255, 255, 0.8);
-    z-index: 1
-}
+    background-color: red;
+/*    background-color:rgba(255, 255, 255, 0.8);
+*/    
 
-#intOverlay ul {
+#countyInfo {
     position: relative;
-    height: 650px;
+    display: flex;
     width:100%;
-    list-style:none;
+    background-color:   #ADD8E6;
     font-family: arial;
     cursor:pointer;
-    padding:0;
+    padding:5px;
     margin:0;
     overflow-y:auto;
 }
 
-#intOverlay ul li {
+/*#intOverlay ul li {
     position: relative;
     border: 1px solid #BFBFBF;
     padding: 8.5px 5px 8.6px 8px;
@@ -51,8 +48,8 @@
     margin: 0 auto; display:block; 
   }
 
-
-/* media query — on small screens, overlay takes up slightly more % and add line-height for wrapped names*/
+*/
+/* media query — on small screens, overlay takes up slightly more % and add line-height for wrapped names
 /*@media only screen and (max-width: 675px) {
 
     #intOverlay ul li {
