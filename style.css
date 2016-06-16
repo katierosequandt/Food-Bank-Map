@@ -1,32 +1,58 @@
+.wholeChart {
+    max-height: 600px;
+}
+
 .int_chart {
     position:relative;
-    height: 650px;
+    height: 575px;
     max-width: 100%;  
     stroke-width:0.5;
-  }
- 
-/*#intOverlay {
-    position:absolute;
-    width:30%;
-    max-width:250px;
-    height:100%;
-    left:0;
-    top:0;
-    bottom:0;
-    background-color: red;
-/*    background-color:rgba(255, 255, 255, 0.8);
-*/    
+  }  
 
 #countyInfo {
     position: relative;
     display: flex;
     width:100%;
-    background-color:   #ADD8E6;
-    font-family: arial;
-    cursor:pointer;
-    padding:5px;
+    background-color: #CAD6E8;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    cursor:default;
     margin:0;
     overflow-y:auto;
+}
+
+.styledButton {
+    background-color: #006DB2;
+    border:1px solid #124d77;
+    cursor:pointer;
+    color:#ffffff;
+    font-family:Arial;
+    font-size:13px;
+    padding:6px 24px;
+    text-decoration:none;
+}
+
+
+.checkboxlabel {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.directions {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+#showAllButton,
+#hideAllButton,
+#selectCounty {
+    cursor: pointer;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+}
+
+.checkbox {
+    cursor: pointer;
 }
 
 /*#intOverlay ul li {

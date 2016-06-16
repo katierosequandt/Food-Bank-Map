@@ -30,8 +30,6 @@ var iconMap = {
 
 
 
-
-
 //_____________FUNCTIONS FOR EASY FORMATTING OF NUMBERS/ STRINGS FOR DISPLAY___________//
 
 //function adding commas to numbers for readable display of pounds of food
@@ -43,6 +41,8 @@ function numberWithCommas(x) {
 function toTitleCase(str) {
 	return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
+// this sets the diplay at the top of the map to empty. When a county is selected, this will populate with html about that county.
+var countyDisplay = "All Counties";
 
 
 
@@ -50,7 +50,7 @@ function toTitleCase(str) {
 
 //__________  MAP SETUP & STYLING ___________________//
 
-//initialize counties geojson, county borders and info (NY counties served by food bank)
+//initialize counties geojson, county borders and info (all NY counties served by food bank)
 var counties =
 {"type":"FeatureCollection","features":
 [{"type":"Feature","properties":{"STATE":"36","COUNTY":"001","NAME":"Albany","LSAD":"06","LSAD_TRANS":"County","OID_":0,"COUNTY_FIP":"001","POP2000":294565,"WHITE":245060,"BLACK":32624,"AMER_ES":605,"ASIAN":8090,"HAWN_PI":84,"OTHER":3102,"MULT_RACE":5000,"HISPANIC":9079,"MALE":140885,"FEMALE":153680,"M_UNDER5":8610,"M5_9":9768,"M10_14":9967,"M15_17":5883,"M18_19":5266,"M20":2710,"M21":2547,"M22_24":5866,"M25_29":9179,"M30_34":10198,"M35_39":10995,"M40_44":11050,"M45_49":10784,"M50_54":9773,"M55_59":6709,"M60_61":2134,"M62_64":2946,"M65_66":1813,"M67_69":2758,"M70_74":4512,"M75_79":3576,"M80_84":2324,"M_OVER85":1517,"F_UNDER5":8039,"F5_9":9176,"F10_14":9465,"F15_17":5569,"F18_19":5509,"F20":2750,"F21":2599,"F22_24":6137,"F25_29":9544,"F30_34":10500,"F35_39":11651,"F40_44":11817,"F45_49":11358,"F50_54":10286,"F55_59":7344,"F60_61":2474,"F62_64":3368,"F65_66":2221,"F67_69":3466,"F70_74":6013,"F75_79":5550,"F80_84":4376,"F_OVER85":4468,"HOUSEHOLDS":120512,"AV_HH_SIZE":2,"HSEHLD_1M":16703,"HSEHLD_1F":23073,"MAR_MINORC":22613,"MAR_NO_MC":29437,"MHH_MINORC":2094,"FHH_MINORC":8971,"FAMILIES":70973,"AV_FAM_SZ":3,"HSE_UNITS":129972,"URBAN":117719,"RURAL":12253,"VACANT":9460,"OWNER_OCC":69534,"RENTER_OCC":50978},"geometry":{"type":"Polygon","coordinates":[[[-73.809365,42.778877],[-73.799465,42.778877],[-73.787065,42.789677],[-73.777364,42.791777],[-73.768764,42.785877],[-73.750164,42.801377],[-73.737663,42.818877],[-73.726663,42.822577],[-73.722663,42.820677],[-73.721363,42.813077],[-73.717163,42.809277],[-73.719863,42.801277],[-73.709963,42.793377],[-73.708963,42.787677],[-73.697762,42.778777],[-73.690065,42.775459],[-73.676762,42.783277],[-73.683762,42.766677],[-73.690162,42.735278],[-73.697263,42.728778],[-73.703563,42.709478],[-73.702463,42.699978],[-73.729264,42.664879],[-73.741764,42.654379],[-73.75067,42.637024],[-73.752965,42.628679],[-73.761265,42.610379],[-73.761265,42.600779],[-73.757265,42.58718],[-73.752365,42.57668],[-73.752168,42.56672],[-73.756465,42.54868],[-73.758313,42.534215],[-73.76377,42.521135],[-73.77588,42.505817],[-73.785548,42.487209],[-73.785709,42.471632],[-73.783721,42.464231],[-73.811975,42.461907],[-73.929697,42.445341],[-74.028968,42.434476],[-74.117311,42.423608],[-74.254303,42.408207],[-74.263469,42.407127],[-74.264863,42.419863],[-74.252432,42.445344],[-74.244509,42.470103],[-74.241629,42.472036],[-74.236447,42.485459],[-74.228502,42.494379],[-74.224985,42.50855],[-74.225655,42.526415],[-74.229065,42.52903],[-74.237977,42.544592],[-74.240428,42.552911],[-74.233995,42.575688],[-74.220274,42.585412],[-74.215166,42.597435],[-74.193495,42.618999],[-74.19257,42.627068],[-74.178835,42.647267],[-74.169843,42.667395],[-74.168525,42.67431],[-74.169525,42.691365],[-74.164678,42.717207],[-74.180275,42.729979],[-74.112411,42.738528],[-73.994169,42.752776],[-73.942568,42.759676],[-73.879767,42.766577],[-73.809565,42.775177],[-73.809365,42.778877]]]}},
@@ -91,12 +91,12 @@ var mapStyle = [
 ];
 
 
-// initialize the google roadmap styled with mapStyle, center on food bank, disable scroll wheel
+// initialize the google roadmap styled with mapStyle, center on middle of state near food bank, disable scroll wheel
 var map = new google.maps.Map(document.getElementById('map'), {
        mapTypeControlOptions: {
          mapTypeIds: ['mystyle', google.maps.MapTypeId.ROADMAP]
        },
-       center: new google.maps.LatLng(42.764157, -73.813034),
+       center: new google.maps.LatLng(42.8929, -73.8212),
        zoom: 7,
        mapTypeId: 'mapStyle',
        scrollwheel: false
@@ -113,7 +113,8 @@ var iw = new google.maps.InfoWindow();
 
 
 
-//___________POPULATE COUNTY SELECTION DROPDOWN MENU & ZOOM IN ON SELECTED COUNTY____________//
+
+//___________POPULATE COUNTY SELECTION DROPDOWN MENU, FUNCTION TO ZOOM IN ON SELECTED COUNTY, PULL OUT COUNTY INFO FOR COUNTY INFO DISPLAY____________//
 
 //populate County dropdown with county names in the counties object. Also, ceate PoundsPerCounty object for calcuating pounds distributed to each county.
 var countyDropdown = document.getElementById("selectCounty");
@@ -138,13 +139,21 @@ d3.select("#selectCounty")
 //on user selection, zoom in on that county
 function zoomInOnCounty(dropdownCounty) {
 
-	//if the user selects "All Counties," reset map to original zoom/center"
-  	if (dropdownCounty === "All Counties") {
-			var reset = new google.maps.LatLng(42.764157, -73.813034);
+	//if the user selects "Select a County," reset map to original zoom/center" (this will also be called when "Reset Map" is clicked.)
+  	if (dropdownCounty === "Select a County") {
+			var reset = new google.maps.LatLng(42.8929, -73.8212);
 			map.panTo(reset);
 			map.setZoom(7);
+			//clear county display html
+			document.getElementById("countyInfo").innerHTML = "";
 
-			return;
+			//make every marker visible
+			for (var i in markerCounties) {
+				for (var j = 0; j < markerCounties[i].length; j++) {
+					markerCounties[i][j].setVisible(true);
+				}			
+			}
+			return countyDisplay = "All Counties";
   	}
 
   	// if user selects any county, cycle through counties object to find county info that matches dropdown selection
@@ -152,15 +161,15 @@ function zoomInOnCounty(dropdownCounty) {
 	  	for (var i in counties.features) {
 	    	if (counties.features[i].properties.NAME === dropdownCounty) {
 
-				//pull oout county name, food insecurity rate, number of sites, and pounds donated. call displayCountyInfo function
+				//pull out county name, food insecurity rate, number of sites, and pounds donated. Call displayCountyInfo function
 				var selectedCountyName = dropdownCounty;
 				var selectedCountyInsecurity = counties.features[i].properties.InsecurityRate;
 				var numberOfSites = markerCounties[selectedCountyName.toUpperCase()].length;
 				var selectedCountyPounds = poundsPerCounty[selectedCountyName.toUpperCase()];
 
-				var displayHtml = (selectedCountyName + " County <br> Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%<br>" + numberOfSites + " service sites <br>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015");
+				var displayHtml = ("<ul><lh><strong>" + selectedCountyName + " County:</strong></lh><li>Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%</li><li>" + numberOfSites + " service sites </li><li>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015 </li></ul>");
 
-				displayCountyInfo(displayHtml);
+				displayCountyInfo(selectedCountyName, displayHtml);
 
 
 	    		// set all the coordinates in the selected county's borders to var coords, for zooming & centering the map
@@ -176,6 +185,20 @@ function zoomInOnCounty(dropdownCounty) {
   				}
 
 				map.fitBounds(bounds);
+
+                google.maps.event.addListenerOnce(map, 'bounds_changed', function(event) {
+                               map.panToBounds(bounds);
+
+                	// map.fitBounds(bounds);
+            });
+                // map.panToBounds(bounds);
+
+
+
+
+				            map.panToBounds(bounds);
+
+				return countyDisplay = dropdownCounty;
 	
   			}	
 		}
@@ -192,6 +215,7 @@ var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1cYtYkXZesM
 
 //Use Tabletop to access the data in the google spreadsheet
 function init() {
+
   Tabletop.init( { key: public_spreadsheet_url,
                    callback: accessInfo,
                    simpleSheet: true } );
@@ -236,6 +260,7 @@ function accessInfo(data, tabletop) {
 
 		//keep a running tally of pounds donated in each county
     	poundsPerCounty[county] = poundsPerCounty[county] + pounds;
+
 	}
 }
 
@@ -246,7 +271,8 @@ function createMarker(lat, lng, name, address, contact, type, county, html, icon
 		position: {lat: lat, lng: lng},
     	icon: icon,
     	type: type,
-    	html: html
+    	html: html,
+    	county: county
 	});
 
 	//using oms makes spiderfy work for overlapping markers
@@ -287,14 +313,25 @@ function allMarkerVisibility(trueOrFalse) {
 //toggle group function, called by selecting checkboxes (set up in index.html). Passes in name & id, checks if box is checked, and displays accordingly
 function toggleGroup(type, id) {
 
+	// cycle through the toggled marker group, and then check to see whether it was checked or unchecked
     for (var i = 0; i < markerGroups[type].length; i++) {
     	var marker = markerGroups[type][i];
-
     	if (document.getElementById(id).checked) {
-        	marker.setVisible(true);
-    	} else {
+    		// if all counties are displaying, go ahead and make all markers of the checked type visible
+    		if (countyDisplay === "All Counties") {
+    			marker.setVisible(true);
+    		}
+        	// if a specific county is selected, only display checked markers in that county 
+        	else {
+        		if (marker.county === countyDisplay.toUpperCase()) {
+        			marker.setVisible(true);
+        		}
+        	}
+       	}
+       	//if box was unchecked, hide all markers of that type
+    	else {
         	marker.setVisible(false);
-    	}
+		}
 	}
 }
 
@@ -408,15 +445,35 @@ function ready(error, insecure) {
 		var numberOfSites = markerCounties[selectedCountyName.toUpperCase()].length;
 		var selectedCountyPounds = poundsPerCounty[selectedCountyName.toUpperCase()];
 
-		var displayHtml = (selectedCountyName + " County <br> Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%<br>" + numberOfSites + " service sites <br>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015");
+		var displayHtml = ("<ul><lh><strong>" + selectedCountyName + " County:</strong></lh><li>Insecurity Rate: " + (selectedCountyInsecurity * 100).toFixed(1) + "%</li><li>" + numberOfSites + " service sites </li><li>"+ numberWithCommas(selectedCountyPounds) + " pounds in 2015 </li></ul>");
 
 
-		displayCountyInfo(displayHtml);
+		displayCountyInfo(selectedCountyName, displayHtml);
+		countyDisplay = selectedCountyName;
+		return countyDisplay;
 	});
 
-	function displayCountyInfo(displayHtml) {
+
+
+	function displayCountyInfo(selectedCountyName, displayHtml) {
 
 		document.getElementById("countyInfo").innerHTML = displayHtml;
+
+		// console.log(markerCounties[selectedCountyName.toUpperCase()]);
+
+		for (var i in markerCounties) {
+
+			if (i === selectedCountyName.toUpperCase()) {
+				for (var j = 0; j < markerCounties[i].length; j++) {
+					markerCounties[i][j].setVisible(true);
+				}			}
+			else {
+				for (var j = 0; j < markerCounties[i].length; j++) {
+					markerCounties[i][j].setVisible(false);
+				}
+			}
+		}
+
   	}
 
 
@@ -430,6 +487,10 @@ oms.addListener('click', function(marker, event) {
 });
 
 google.maps.event.addListener(map, "click", function(event) {
+	iw.close();
+});
+
+google.maps.event.addListener(countyLayer, "click", function(event) {
 	iw.close();
 });
 

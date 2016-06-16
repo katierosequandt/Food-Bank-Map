@@ -11,34 +11,45 @@
 </head>
 
 <body>
+<div class="wholeChart">
+<p class="directions">Click the icons to learn more about each site. Sort the displayed icons using the checkboxes and county selection menu, or by clicking on a county. Display all icons by clicking "Reset Map."</p>
 <form id="myForm">
   <select id="selectCounty">
-    <option>All Counties</option>
+    <option>Select a County</option>
   </select>
+
+  <button type="button" class="styledButton" id="resetMapButton" name="resetMap" onclick="zoomInOnCounty('Select a County'); allMarkerVisibility(true)">Reset Map</button>
+
 </form>
 
+
+
+<!-- <a href="#" class="myButton">graphicriver</a>
+ -->
 <button type="button" id="showAllButton" name="showAll" onclick="allMarkerVisibility(true)">Show All Markers</button>
 
 <button type="button" id="hideAllButton" name="hideAll" onclick="allMarkerVisibility(false)">Hide All Markers</button>
 
-<input type="checkbox" class="checkbox" id="backpackCheckbox" name="backpack" onclick="toggleGroup('Backpack Programs', 'backpackCheckbox')" checked="checked"></input><label for="backpackCheckbox">Backpack Programs</label> 
+<input type="checkbox" class="checkbox" id="backpackCheckbox" name="backpack" onclick="toggleGroup('Backpack Programs', 'backpackCheckbox')" checked="checked"></input><label for="backpackCheckbox" class="checkboxlabel"><img src="backpack.png"> Backpack Programs</label> 
 
-<input type="checkbox" class="checkbox" id="closedPantriesCheckbox" name="closedPantries" onclick="toggleGroup('Closed Pantries', 'closedPantriesCheckbox')" checked="checked"></input><label for="closedPantriesCheckbox">Closed Pantries</label> 
+<input type="checkbox" class="checkbox" id="closedPantriesCheckbox" name="closedPantries" onclick="toggleGroup('Closed Pantries', 'closedPantriesCheckbox')" checked="checked"></input><label for="closedPantriesCheckbox" class="checkboxlabel"><img src="carrot.png"> Closed Pantries</label> 
 
-<input type="checkbox" class="checkbox" id="emergencySheltersCheckbox" name="emergencyShelters" onclick="toggleGroup('Emergency Shelters', 'emergencySheltersCheckbox')" checked="checked"></input><label for="emergencySheltersCheckbox">Emergency Shelters</label> 
+<input type="checkbox" class="checkbox" id="emergencySheltersCheckbox" name="emergencyShelters" onclick="toggleGroup('Emergency Shelters', 'emergencySheltersCheckbox')" checked="checked"></input><label for="emergencySheltersCheckbox" class="checkboxlabel"><img src="house.png"> Emergency Shelters</label> 
 
-<input type="checkbox" class="checkbox" id="foodPantriesCheckbox" name="foodPantries" onclick="toggleGroup('Food Pantries', 'foodPantriesCheckbox')" checked="checked"></input><label for="foodPantriesCheckbox">Food Pantries</label>
+<input type="checkbox" class="checkbox" id="foodPantriesCheckbox" name="foodPantries" onclick="toggleGroup('Food Pantries', 'foodPantriesCheckbox')" checked="checked"></input><label for="foodPantriesCheckbox" class="checkboxlabel"><img src="grocery-bag.png"> Food Pantries</label>
 
-<input type="checkbox" class="checkbox" id="massDistributionCheckbox" name="massDistribution" onclick="toggleGroup('Mass Distribution', 'massDistributionCheckbox')" checked="checked"></input><label for="massDistributionCheckbox">Mass Distribution</label>
+<input type="checkbox" class="checkbox" id="massDistributionCheckbox" name="massDistribution" onclick="toggleGroup('Mass Distribution', 'massDistributionCheckbox')" checked="checked"></input><label for="massDistributionCheckbox" class="checkboxlabel"><img src="shopping_cart.png"> Mass Distribution</label>
 
-<input type="checkbox" class="checkbox" id="nonEmergencyCheckbox" name="nonEmergency" onclick="toggleGroup('Non-Emergency Services', 'nonEmergencyCheckbox')" checked="checked"></input><label for="nonEmergencyCheckbox">Non-Emergency Services</label>
+<input type="checkbox" class="checkbox" id="nonEmergencyCheckbox" name="nonEmergency" onclick="toggleGroup('Non-Emergency Services', 'nonEmergencyCheckbox')" checked="checked"></input><label for="nonEmergencyCheckbox" class="checkboxlabel"><img src="apple.png"> Non-Emergency Services</label>
 
-<input type="checkbox" class="checkbox" id="soupKitchensCheckbox" name="soupKitchens" onclick="toggleGroup('Soup Kitchens', 'soupKitchensCheckbox')" checked="checked"></input><label for="soupKitchensCheckbox">Soup Kitchens</label>
+<input type="checkbox" class="checkbox" id="soupKitchensCheckbox" name="soupKitchens" onclick="toggleGroup('Soup Kitchens', 'soupKitchensCheckbox')" checked="checked"></input><label for="soupKitchensCheckbox" class="checkboxlabel"><img src="soup.png"> Soup Kitchens</label>
 
 
 <div id="countyInfo"></div>
 
 <div class="int_chart" id="map"></div>
+
+</div>
 
 
   <script type="text/javascript" src="oms.min.js"></script>
